@@ -1,0 +1,22 @@
+﻿@model BackLog.ViewModels.PartialViewModels.EmptyStateViewModel
+
+<div class="d-flex flex-column align-items-center justify-content-center p-5">
+
+    <div class="card text-center shadow-sm" style="max-width: 520px; width: 100%;">
+
+        <div class="card-body p-5">
+
+            <h3 class="mb-4">@Model.Title</h3>
+
+            <a asp-controller="@Model.Controller"
+               asp-action="@Model.Action"
+               class="btn btn-primary">
+                <i class="bi bi-plus-lg fs-6 me-1"></i>
+                @Model.ButtonText
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

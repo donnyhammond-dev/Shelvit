@@ -1,0 +1,238 @@
+﻿@using BackLog.ViewModels.PartialViewModels
+@using BackLog.ViewModels.AlbumViewModels
+@using BackLog.Enums
+@using BackLog.Helpers
+
+@model AlbumIndexViewModel
+
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+
+		<!--Table Header-->
+		<thead class="table-header">
+			<tr>
+				<th style="width:12%" class="text-primary"><!--Album Image--></th>
+
+				<th style="width:15%">
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Title"
+					   asp-route-SortBy="Title"
+					   asp-route-IsDesc="@(Model.SortBy == "Title" ? !Model.IsDesc : false)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Title
+
+						@if (Model.SortBy == "Title")
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th style="width:15%">
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Artist"
+					   asp-route-SortBy="Artist"
+					   asp-route-IsDesc="@(Model.SortBy == "Artist" || Model.SortBy == null ? !Model.IsDesc : false)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Artist
+
+						@if (Model.SortBy == "Artist" || Model.SortBy == null)
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th style="width:8%" class="d-none d-lg-table-cell">
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Year"
+					   asp-route-SortBy="Year"
+					   asp-route-IsDesc="@(Model.SortBy == "Year" ? !Model.IsDesc : false)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Year
+
+						@if (Model.SortBy == "Year")
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th style="width:8%">
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Format"
+					   asp-route-SortBy="Format"
+					   asp-route-IsDesc="@(Model.SortBy == "Format" ? !Model.IsDesc : false)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Format
+
+						@if (Model.SortBy == "Format")
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th class="d-none d-lg-table-cell">
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Genre"
+					   asp-route-SortBy="Genre"
+					   asp-route-IsDesc="@(Model.SortBy == "Genre" ? !Model.IsDesc : false)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Genre
+
+						@if (Model.SortBy == "Genre")
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th>
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Status"
+					   asp-route-SortBy="Status"
+					   asp-route-IsDesc="@(Model.SortBy == "Status" ? !Model.IsDesc : false)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Status
+
+						@if (Model.SortBy == "Status")
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th style="width:7%">
+					<a asp-action="Index"
+					   class="sort-link"
+					   title="Sort By Rating"
+					   asp-route-SortBy="Rating"
+					   asp-route-IsDesc="@(Model.SortBy == "Rating" ? !Model.IsDesc : true)"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Format="@Model.Format"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-IsViewAllMode="@Model.IsViewAllMode">
+
+						Rating
+
+						@if (Model.SortBy == "Rating")
+						{
+							<i class="bi @(Model.IsDesc ? "bi-caret-down-fill" : "bi-caret-up-fill")"></i>
+						}
+					</a>
+				</th>
+
+				<th class="text-primary"><!--Actions Column--></th>
+			</tr>
+		</thead>
+
+		<!--Table Body-->
+		<tbody>
+			@foreach (var album in Model.Albums.Items)
+			{
+				<tr>
+					<td>
+						<button type="button"
+								title="Add Custom Image"
+								class="btn p-0 border-0 bg-transparent"
+								data-bs-toggle="modal"
+								data-bs-target="#imageModal"
+								data-id="@album.Id"
+								data-page-number="@Model.PageNumber"
+								data-image="@album.CustomImageUrl">
+							<img src="@(album.CustomImageUrl ?? album.ImageUrl ?? "/images/placeholder.png")"
+							 class="img-thumbnail"
+							 style="width:180px;" />
+					</button>
+			    	</td>
+					<td><strong>@album.Title</strong></td>
+					<td><strong>@album.Artist</strong></td>
+					<td class="d-none d-lg-table-cell">@album.Year</td>
+					<td>
+						<img src="@Url.Content(album.Format.GetMusicFormatIconPath())"
+							 alt="@album.Format.GetDisplayName()"
+							 title="@album.Format.GetDisplayName()"
+							 class="music-format-icon" />
+					</td>
+					<td class="d-none d-lg-table-cell">@album.Genre</td>
+					<td>
+						<img src="@Url.Content(album.Status.GetStatusIconPath())"
+							 alt="@album.Status.GetDisplayName()"
+							 title="@album.Status.GetDisplayName()"
+							 class="status-icon" />
+					</td>
+
+					<!--Rating-->
+					<td>
+						@if (album.Rating.HasValue)
+						{
+							<partial name="_StarRating"
+									 model="new StarRatingViewModel { Rating = album.Rating.Value }" />
+						}
+					</td>
+
+					<td>
+						<div class="d-flex flex-column align-items-center gap-1">
+							<a asp-action="Edit"
+							   asp-route-pageNumber="@Model.PageNumber"
+							   asp-route-id="@album.Id"
+							   class="btn btn-sm btn-primary"
+							   title="Edit Album">
+								<i class="bi bi-pencil fs-6"></i>
+							</a>
+
+							<button type="button"
+									class="btn btn-sm btn-outline-primary"
+									title="Delete Album"
+									data-bs-toggle="modal"
+									data-bs-target="#deleteModal"
+									data-id="@album.Id"
+									data-pageNumber="@Model.PageNumber"
+									data-title="@album.Title">
+								<i class="bi bi-trash3 fs-6"></i>
+							</button>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,160 @@
+﻿@using BackLog.ViewModels.BookViewModels
+@using BackLog.Enums
+
+@model BookFormViewModel
+
+<div class="hero-statement">Book Library</div>
+
+
+<div class="container mt-4">
+	<div class="row">
+		<div class="col-md-8 offset-md-2">
+			<div class="card">
+				<div class="card-header bg-primary text-white text-center">
+					<h2 class="section-header">Edit Book</h2>
+				</div>
+				<div class="card-body">
+					<form id="editForm" asp-action="Edit" method="post">
+						@Html.AntiForgeryToken()
+						<div asp-validation-summary="All" class="text-danger"></div>
+
+						<input asp-for="PageNumber" type="hidden" />
+
+						<div class="mb-3">
+							<label asp-for="Title" class="form-label">Title</label>
+							<input asp-for="Title" class="form-control" placeholder="Enter Book Title" />
+							<span asp-validation-for="Title" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Author" class="form-label">Artist</label>
+							<input asp-for="Author" class="form-control" placeholder="Enter Book Author" />
+							<span asp-validation-for="Author" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Year" class="form-label">Year</label>
+							<select asp-for="Year" class="form-select" asp-items="@Model.YearList">
+								<option value="">Select Year</option>
+							</select>
+							<span asp-validation-for="Year" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Format" class="form-label"></label>
+							<select asp-for="Format" class="form-select" asp-items="@Model.FormatList">
+							</select>
+							<span asp-validation-for="Format" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Genre" class="form-label"></label>
+							<select asp-for="Genre" class="form-select" asp-items="@Model.GenreList">
+							</select>
+							<span asp-validation-for="Genre" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Status" class="form-label">Status</label>
+							<select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<CompletionStatus>()">
+								<option value="">Select Status</option>
+							</select>
+							<span asp-validation-for="Status" class="text-danger"></span>
+						</div>
+						<!--Rating Input-->
+						<div class="mb-3">
+							<label class="form-label me-2">Rating</label>
+							<div class="star-rating">
+								@for (int i = 5; i >= 1; i--)
+								{
+									<input type="radio"
+										   id="star-@i"
+										   name="Rating"
+										   value="@i"
+										   @(Model.Rating == i ? "checked" : "") />
+
+									<label for="star-@i"
+										   class="star"
+										   title="@(i switch
+				{
+					1 => "Poor",
+					2 => "Below Average",
+					3 => "Good",
+					4 => "Excellent",
+					5 => "Masterpiece",
+					_ => "No Rating"
+
+				})">
+									<svg xmlns="http://www.w3.org/2000/svg"
+										 width="20"
+										 height="20"
+										 viewBox="0 0 16 16"
+										 class="bi bi-star">
+										<path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73z" />
+									</svg>
+								</label>
+																}
+							</div>
+
+							<button class="btn btn-outline-primary btn-sm"
+									id="clearStars"
+									title="Clear Rating">
+
+								<i class="bi bi-x fs-6"></i>
+							</button>
+
+							<span asp-validation-for="Rating" class="text-danger"></span>
+						</div>
+
+						<!--Cancel/Submit Buttons-->
+						<div class="d-flex justify-content-end gap-2 mb-2">
+							<a asp-action="Index" 
+							asp-route-pageNumber="@Model.PageNumber"
+							class="btn btn-outline-primary" 
+							title="Cancel/Return to Library">
+								<i class="bi bi-x-lg fs-6 me-1"></i>
+								Cancel
+							</a>
+							<button type="submit"
+								    id="submitButton"
+									class="btn btn-primary"
+									title="Save Changes">
+								<i class="bi bi-check2-circle fs-6 me-1"></i>
+								Save Changes
+							</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Clear Rating JS-->
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+
+		const clearButton = document.getElementById("clearStars");
+		const ratingRadios = document.querySelectorAll('input[name="Rating"]');
+
+		clearButton.addEventListener("click", function (e) {
+
+			e.preventDefault();
+
+			ratingRadios.forEach(radio => {
+				radio.checked = false;
+			});
+		});
+
+	});
+</script>
+
+<!--Submit Load State-->
+<script>
+	const form = document.getElementById("editForm");
+	const submitButton = document.getElementById("submitButton");
+
+	form.addEventListener("submit", function () {
+
+		submitButton.disabled = true;
+
+		submitButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>`;
+	});
+</script>
+

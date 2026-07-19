@@ -1,0 +1,46 @@
+﻿<div class="modal fade" id="imageModal" tabindex="-1">
+	<div class="modal-dialog">
+
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Game Image</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<form method="post" asp-action="UpdateImage">
+
+				<div class="modal-body">
+
+					<input type="hidden" name="id" id="imageGameId" />
+					<input type="hidden" name="pageNumber" id="imageUpdatePageNumber" />
+
+					<label>Image URL</label>
+					<input type="text"
+						   class="form-control"
+						   id="imageUrlInput"
+						   name="customImageUrl"
+						   placeholder="Paste image URL or leave empty for auto image" />
+
+					<small class="text-muted">
+						Leave empty to use automatic API image.
+					</small>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cancel">
+						Cancel
+					</button>
+
+					<button type="submit" class="btn btn-primary" title="Save Image Url">
+						Save
+					</button>
+				</div>
+
+			</form>
+
+		</div>
+
+	</div>
+</div>

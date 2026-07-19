@@ -1,0 +1,312 @@
+﻿@using BackLog.ViewModels.GameViewModels
+@model GameFormViewModel
+
+<!--Header-->
+<div class="hero-statement">Game Library</div>
+
+<div class="container mt-4">
+	<div class="row">
+		<div class="col-md-8 offset-md-2">
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					<h2 class="section-header">Add Game</h2>
+				</div>
+
+				<div class="card-body">
+					<form id="createForm" asp-action="Create" method="post">
+						@Html.AntiForgeryToken()
+						<div asp-validation-summary="All" class="text-danger"></div>
+
+						<div class="mb-3">
+							<label asp-for="Title" class="form-label">Title</label>
+							<input asp-for="Title" 
+							class="form-control" 
+							id="titleInput" 
+							placeholder="Enter Title" 
+							autocomplete="= off"/>
+
+							<div id="titleSuggestions"
+								 class="list-group position-absolute w-100 shadow-sm">
+							</div>
+
+							<span asp-validation-for="Title" class="text-danger"></span> 
+						</div>
+
+						<!--Loading State-->
+						<div id="apiLoading" class="d-none">
+							<div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+							<span class="ms-2 text-muted small">
+								Fetching details...
+							</span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Year" class="form-label">Year</label>
+							<select asp-for="Year" class="form-select" id="yearSelect" asp-items="@Model.YearList">
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Platform" class="form-label"></label>
+							<select asp-for="Platform" class="form-select" id="platformSelect" asp-items="@Model.PlatformList">
+							</select>
+							<span asp-validation-for="Platform" class="text-danger"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Genre" class="form-label"></label>
+							<select asp-for="Genre" class="form-select" asp-items="@Model.GenreList">
+							</select>
+							<span asp-validation-for="Genre" class="text-danger"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Status" class="form-label">Status</label>
+							<select asp-for="Status" class="form-select" asp-items="@Model.StatusList">
+							</select>
+							<span asp-validation-for="Status" class="text-danger"></span>
+						</div>
+						
+						<!--Rating Input-->
+						<div class="mb-3">
+							<label class="form-label me-2">Rating</label>
+							<div class="star-rating">
+								@for (int i = 5; i >= 1; i--)
+								{
+									<input type="radio"
+										   id="star-@i"
+										   name="Rating"
+										   value="@i"
+									@(Model.Rating == i ? "checked" : "") />
+
+									<label for="star-@i" class="star"
+										   title="@(i switch
+			                            	{
+			                            		1 => "Poor",
+			                            		2 => "Below Average",
+			                            		3 => "Good",
+			                            		4 => "Excellent",
+			                            		5 => "Masterpiece",
+			                            		_ => "No Rating"
+			                            
+			                            	})">
+										<svg xmlns="http://www.w3.org/2000/svg"
+											 width="20"
+											 height="20"
+											 viewBox="0 0 16 16"
+											 class="bi bi-star">
+											<path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73z" />
+										</svg>
+									</label>
+								}
+							</div>
+							<button class="btn btn-sm" id="clearStars" title="Clear Rating">
+								<i class="bi bi-x fs-6"></i>
+							</button>
+							<span asp-validation-for="Rating" class="text-danger"></span>
+						</div>
+
+						<!--Cancel/Submit Buttons-->
+						<div class="d-flex justify-content-end gap-2 mb-2">
+							<a asp-action="Index" class="btn btn-outline-primary" title="Cancel/Return to Library">
+								<i class="bi bi-x-lg fs-6 me-1"></i>
+								Cancel
+							</a>
+							<button type="submit"
+									id="submitButton"
+									class="btn btn-primary"
+									title="Add Game">
+								<i class="bi bi-plus-lg fs-6 me-1"></i>Add Game
+							</button>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+	const titleInput = document.getElementById("titleInput");
+	const platformInput = document.getElementById("platformInput");
+	const yearSelect = document.getElementById("yearSelect");
+	const suggestionsBox = document.getElementById("titleSuggestions");
+	const apiLoading = document.getElementById("apiLoading");
+
+	let timeout;
+	let suggestions = [];
+	let activeIndex = -1;
+
+	// Title Input Autocomplete
+	titleInput.addEventListener("input", function () {
+
+		clearTimeout(timeout);
+
+		timeout = setTimeout(async () => {
+
+			const title = titleInput.value;
+
+			if (!title) {
+				suggestionsBox.innerHTML = "";
+				suggestions = [];
+				return;
+			}
+
+			try {
+				const response =
+					await fetch(`/Library/AutocompleteGame?title=${encodeURIComponent(title)}`);
+
+				if (!response.ok) return;
+
+				suggestions = await response.json();
+
+				renderSuggestions();
+
+			}
+			catch (err) {
+				console.error("Autocomplete failed", err);
+			}
+
+		}, 300);
+	});
+
+	// Render Dropdown
+	function renderSuggestions() {
+
+		suggestionsBox.innerHTML = "";
+		activeIndex = -1;
+
+		if (!suggestions.length) return;
+
+		suggestions.forEach((item, index) => {
+
+			const btn = document.createElement("button");
+
+			btn.type = "button";
+			btn.className = "list-group-item list-group-item-action";
+			btn.textContent = item;
+
+			btn.addEventListener("click", () => {
+				selectSuggestion(index);
+			});
+
+			suggestionsBox.appendChild(btn);
+		});
+	}
+
+	// SELECT SUGGESTION
+	async function selectSuggestion(index) {
+
+		const selected = suggestions[index];
+
+		if (!selected) return;
+
+		titleInput.value = selected;
+		suggestionsBox.innerHTML = "";
+
+		apiLoading.classList.remove("d-none");
+
+		try {
+			const response =
+				await fetch(`/Library/SearchGame?title=${encodeURIComponent(selected)}`);
+
+			if (!response.ok) return;
+
+			const data = await response.json();
+
+			if (!data) return;
+
+			yearSelect.value = data.year ?? "";
+
+			// optional fields if you add them later:
+			// platformInput.value = data.platform ?? "";
+
+		}
+		catch (err) {
+			console.error("Autofill failed", err);
+		}
+		finally {
+			apiLoading.classList.add("d-none");
+		}
+	}
+
+	// KEYBOARD NAVIGATION
+	titleInput.addEventListener("keydown", function (e) {
+
+		const items =
+			suggestionsBox.querySelectorAll(".list-group-item");
+
+		if (!items.length) return;
+
+		if (e.key === "ArrowDown") {
+			e.preventDefault();
+			activeIndex = Math.min(activeIndex + 1, items.length - 1);
+		}
+
+		if (e.key === "ArrowUp") {
+			e.preventDefault();
+			activeIndex = Math.max(activeIndex - 1, 0);
+		}
+
+		if (e.key === "Enter" || e.key === "Tab") {
+
+			if (activeIndex >= 0) {
+				e.preventDefault();
+				selectSuggestion(activeIndex);
+			}
+		}
+
+		if (e.key === "Escape") {
+			suggestionsBox.innerHTML = "";
+		}
+
+		items.forEach((item, i) => {
+			item.classList.toggle("active", i === activeIndex);
+		});
+	});
+
+	// CLOSE DROPDOWN ON CLICK OUTSIDE
+	document.addEventListener("click", function (e) {
+
+		if (!suggestionsBox.contains(e.target) &&
+			e.target !== titleInput) {
+
+			suggestionsBox.innerHTML = "";
+		}
+	});
+
+</script>
+
+<!--Clear Rating JS-->
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+
+		const clearButton = document.getElementById("clearStars");
+		const ratingRadios = document.querySelectorAll('input[name="Rating"]');
+
+		clearButton.addEventListener("click", function (e) {
+
+			e.preventDefault();
+
+			ratingRadios.forEach(radio => {
+				radio.checked = false;
+			});
+		});
+
+	});
+</script>
+
+<!--Submit Load State-->
+<script>
+	const form = document.getElementById("createForm");
+	const submitButton = document.getElementById("submitButton");
+
+	form.addEventListener("submit", function () {
+
+		submitButton.disabled = true;
+
+		submitButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>`;
+	});
+</script>

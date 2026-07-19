@@ -1,0 +1,125 @@
+﻿@using BackLog.ViewModels.DashboardViewModels
+@model GameStatsViewModel
+
+<!--Header-->
+<div class="hero-statement">Game Library</div>
+
+<div class="container">
+
+    <!--Card -->
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            <div class="card shadow-sm">
+
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white">
+                    <h2 class="section-header">My Stats</h2>
+                </div>
+
+                <!--Card Body-->
+                <div class="card-body">
+
+                    <div class="row text-center mt-2">
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.TotalGames</h2>
+                                    <p>Total Owned</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.CompletionPercentage.ToString("0")%</h2>
+                                    <p>Completion Rate</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.FullyCompletedPercentage.ToString("0")%</h2>
+                                    <p>100% Completion Rate</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.BackLogCount</h2>
+                                    <p>BackLogged</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.CompletionListCount</h2>
+                                    <p>Completed</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.FullyCompletedGames</h2>
+                                    <p>100% Completed</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h4>@(Model.FavoritePlatform ?? "N/A")</h4>
+                                    <p>Favorite Platform</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h4>@(Model.FavoriteGenre.ToString() ?? "N/A")</h4>
+                                    <p>Favorite Genre</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        @foreach (var platform in Model.PlatformStats.Where(x => x.Count > 0))
+                        {
+                            <div class="col-md-6 mb-3">
+                                <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                    <div class="card-body">
+                                        <h2>@platform.Count</h2>
+                                        <p>@platform.Name Games</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+                <!-- Back Button -->
+                <div class="d-flex justify-content-end mb-3 me-4">
+                    <a asp-action="Index" class="btn btn-outline-primary" title="Return to Library">
+                        <i class="bi bi-arrow-left fs-6 me-1"></i>
+                        Return
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

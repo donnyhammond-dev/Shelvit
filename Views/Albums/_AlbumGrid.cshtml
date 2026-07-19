@@ -1,0 +1,23 @@
+﻿@using BackLog.ViewModels.AlbumViewModels
+@using BackLog.Helpers
+
+@model AlbumIndexViewModel
+
+<div class="container-fluid py-3">
+	<div class="row g-3">
+
+		@foreach (var album in Model.Albums.Items)
+		{
+			<div class="col-4 col-sm-3 col-md-2">
+				<div class="media-grid-image album-grid-image"
+					 title="@album.Title&#10;@album.Artist&#10;@album.Year&#10;@album.Format&#10;@album.Status.GetDisplayName()&#10;@(album.Rating.HasValue ? $"{album.Rating}/5" : "")">
+
+					<img src="@(album.CustomImageUrl ?? album.ImageUrl ?? "/images/placeholder.png")"
+						 alt="@album.Title" />
+
+				</div>
+			</div>
+		}
+
+	</div>
+</div>

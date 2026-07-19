@@ -1,0 +1,54 @@
+﻿@using BackLog.ViewModels.HomeViewModels
+@model HomeViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="hero-statement">
+    Long Live Physical Media
+</div>
+
+
+<div class="carousel-row">
+    <div class="carousel-track games-track">
+        @foreach (var tile in Model.GameTiles)
+        {
+            <img class="tile-img game-img" src="@tile.ImageUrl" title="@tile.Title" />
+        }
+
+        @foreach (var tile in Model.GameTiles)
+        {
+            <img class="tile-img game-img" src="@tile.ImageUrl" title="@tile.Title" />
+        }
+    </div>
+</div>
+
+<div class="carousel-row">
+    <div class="carousel-track albums-track">
+        @foreach (var tile in Model.AlbumTiles)
+        {
+            <img class="tile-img album-img" src="@tile.ImageUrl" title="@tile.Title" />
+        }
+
+        @foreach (var tile in Model.AlbumTiles)
+        {
+            <img class="tile-img album-img" src="@tile.ImageUrl" title="@tile.Title" />
+        }
+    </div>
+</div>
+
+<div class="carousel-row">
+    <div class="carousel-track books-track">
+        @foreach (var tile in Model.BookTiles)
+        {
+            <img class="tile-img book-img" src="@tile.ImageUrl" title="@tile.Title" />
+        }
+
+        @foreach (var tile in Model.BookTiles)
+        {
+            <img class="tile-img book-img" src="@tile.ImageUrl" title="@tile.Title" />
+        }
+    </div>
+</div>
+
+

@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <span class="nav-link text-white @(User.Identity?.Name?.Length > 20 ? "text-truncate" : "")"
+             >
+            Welcome @User.Identity?.Name!
+        </span>
+    </li>
+
+    <li class="nav-item">
+        <form method="post" asp-area="Identity" asp-page="/Account/Logout">
+            <button type="submit" class="nav-link btn btn-link bootstrap-btn">
+                Logout
+            </button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item me-2">
+        <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">
+            Register
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">
+            Login
+        </a>
+    </li>
+}

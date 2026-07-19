@@ -1,0 +1,235 @@
+﻿@using BackLog.ViewModels.PartialViewModels
+@using BackLog.ViewModels.GameViewModels
+@using BackLog.Helpers
+
+@model LibraryViewModel
+
+<!--Header-->
+<div class="hero-statement">Game Library</div>
+
+<!--Alert Messages-->
+@if (TempData["Success"] != null)
+{
+	<div class="alert alert-success">
+		@TempData["Success"]
+	</div>
+}
+@if (TempData["ImageFail"] != null)
+{
+	<div class="alert alert-success">
+		@TempData["ImageFail"]
+	</div>
+}
+
+<!--Empty State-->
+@if (!Model.HasAnyGames)
+{
+	var emptyState = new EmptyStateViewModel
+	{
+		Title = "Your Game Library is Empty!",
+		ButtonText = "Add Your First Game",
+		Controller = "Library",
+		Action = "Create"
+	};
+
+	<partial name="_EmptyState" model="emptyState" />
+}
+else
+{
+	<!--Toolbar-->
+	<div class="mb-3 d-flex flex-column flex-lg-row justify-content-lg-between align-items-stretch align-items-lg-center gap-2">
+
+
+
+
+
+			<!--Left Side-->
+			<div class="d-flex gap-2">
+				<a asp-action="Create" class="btn" title="Add New Game">
+					<i class="bi bi-plus-lg fs-6"></i>
+				</a>
+
+				<a asp-action="Stats" class="btn" title="View Stats">
+					<i class="bi bi-bar-chart-fill fs-6"></i>
+				</a>
+
+				<button type="button"
+						class="btn"
+						title="Share Library"
+						data-bs-toggle="modal"
+						data-bs-target="#shareModal"
+						data-share-table-url="@Url.Action("GamesTable", "SharedLibrary", new { id = Model.ShareToken }, Context.Request.Scheme)"
+						data-share-grid-url="@Url.Action("GamesGrid", "SharedLibrary", new { id = Model.ShareToken }, Context.Request.Scheme)">
+					<i class="bi bi-box-arrow-up fs-6"></i>
+				</button>
+
+				@if (Model.IsGridMode)
+				{
+					<a asp-action="Index" class="btn" title="Table View"
+					   asp-route-IsGridMode="false"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Platform="@Model.Platform"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-StatusGroup="@Model.StatusGroup"
+					   asp-route-SortBy="@Model.SortBy"
+					   asp-route-IsDesc="@Model.IsDesc"
+					asp-route-isViewAllMode="@Model.IsViewAllMode">
+						<i class="bi bi-list-task fs-6"></i>
+					</a>
+				}
+				else
+				{
+					<a asp-action="Index" class="btn" title="Grid View"
+					   asp-route-IsGridMode="true"
+					   asp-route-Search="@Model.Search"
+					   asp-route-Platform="@Model.Platform"
+					   asp-route-Genre="@Model.Genre"
+					   asp-route-Status="@Model.Status"
+					   asp-route-StatusGroup="@Model.StatusGroup"
+					   asp-route-SortBy="@Model.SortBy"
+					   asp-route-IsDesc="@Model.IsDesc"
+					   asp-route-isViewAllMode="@Model.IsViewAllMode">
+						<i class="bi bi-grid-3x3-gap fs-6"></i>
+					</a>
+				}
+				
+			</div>
+
+			<!--Right Side-->
+			<form method="get" class="d-flex gap-2">
+
+			<input type="hidden" asp-for="IsGridMode" />
+			<input type="hidden" asp-for="IsViewAllMode" />
+
+				<select asp-for="StatusGroup" asp-items="Model.StatusGroupList"
+						class="form-select auto-submit border-primary fw-semibold"></select>
+
+				<input asp-for="Search" class="form-control search-submit" placeholder="Search Title" />
+
+				<select asp-for="Platform" asp-items="Model.PlatformList"
+					class="form-select auto-submit">
+				</select>
+
+				<select asp-for="Genre" asp-items="Model.GenreList"
+					class="form-select auto-submit"></select>
+
+				<select asp-for="Status" asp-items="Model.StatusList"
+					class="form-select auto-submit"></select>
+
+				<a asp-action="Index" class="btn action-btn" title="Reset Search Filters"
+				asp-route-isGridMode="@Model.IsGridMode">
+					<i class="bi bi-arrow-counterclockwise fs-6"></i>
+				</a>
+		</form>
+	</div>
+
+	<!--Card-->
+	<div class="card">
+
+		<!--Library Display-->
+		@if (Model.IsGridMode)
+		{
+			<partial name="_GameGrid" model="Model" />
+		}
+		else
+		{
+			<partial name="_GameTable" model="Model" />
+		}
+
+		<!--Pagination/Empty Search State-->
+		@if (!Model.Games.Items.Any())
+		{
+			<div class="text-center text-muted py-4">
+				<h4>No results found</h4>
+				<p>Try different filter options</p>
+			</div>
+		}
+		else
+		{
+			<nav>
+				<ul class="pagination justify-content-center mt-4">
+
+					@if (Model.Games.HasPreviousPage)
+					{
+						<li class="page-item">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-pageNumber="@(Model.Games.PageIndex - 1)"
+							   asp-route-search="@Model.Search"
+							   asp-route-platform="@Model.Platform"
+							   asp-route-genre="@Model.Genre"
+							   asp-route-status="@Model.Status"
+							   asp-route-statusGroup="@Model.StatusGroup"
+							   asp-route-sortBy="@Model.SortBy"
+							   asp-route-isDesc="@Model.IsDesc"
+							   asp-route-isGridMode="@Model.IsGridMode">
+								Previous
+							</a>
+						</li>
+					}
+
+					<li class="page-item disabled">
+						<span class="page-link">
+							Page @Model.Games.PageIndex of @Model.Games.TotalPages
+						</span>
+					</li>
+
+					@if (Model.Games.HasNextPage)
+					{
+						<li class="page-item">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-pageNumber="@(Model.Games.PageIndex + 1)"
+							   asp-route-search="@Model.Search"
+							   asp-route-platform="@Model.Platform"
+							   asp-route-genre="@Model.Genre"
+							   asp-route-status="@Model.Status"
+							   asp-route-statusGroup="@Model.StatusGroup"
+							   asp-route-sortBy="@Model.SortBy"
+							   asp-route-isDesc="@Model.IsDesc"
+							   asp-route-isGridMode="@Model.IsGridMode">
+								Next
+							</a>
+						</li>
+					}
+
+				</ul>
+			</nav>
+
+			<!--View All Toggle-->
+			<form method="get" class="text-center mb-2">
+
+				<!-- Preserve Filters -->
+				<input type="hidden" asp-for="Search" />
+				<input type="hidden" asp-for="Platform" />
+				<input type="hidden" asp-for="Genre" />
+				<input type="hidden" asp-for="Status" />
+				<input type="hidden" asp-for="SortBy" />
+				<input type="hidden" asp-for="IsDesc" />
+				<input type="hidden" asp-for="IsGridMode" />
+				<input type="hidden" asp-for="PageNumber" />
+
+				<div class="form-check d-inline-block">
+					<input asp-for="IsViewAllMode"
+						   class="form-check-input"
+						   onchange="this.form.submit()" />
+
+					<label asp-for="IsViewAllMode" class="form-check-label">
+						View All
+					</label>
+				</div>
+
+			</form>
+		}
+	</div>
+}
+
+<!--Modals-->
+<partial name="_DeleteModal" />
+<partial name="_UpdateImageModal" />
+<partial name="_ShareUrlModal" />
+
+
+
+		

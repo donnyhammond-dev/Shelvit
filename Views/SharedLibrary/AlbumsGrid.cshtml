@@ -1,0 +1,27 @@
+﻿@using BackLog.ViewModels.SharedViewModels
+@using BackLog.Helpers
+
+@model SharedAlbumsViewModel
+
+<!--Header-->
+<div class="hero-statement">Album Library</div>
+
+<!--Grid-->
+<div class="container-fluid py-3">
+	<div class="row g-3">
+
+		@foreach (var album in Model.Albums)
+		{
+			<div class="col-4 col-sm-3 col-md-2">
+				<div class="media-grid-image album-grid-image"
+					 title="@album.Title&#10;@album.Artist&#10;@album.Year&#10;@album.Format">
+
+					<img src="@(album.CustomImageUrl ?? album.ImageUrl ?? "/images/placeholder.png")"
+						 alt="@album.Title" />
+
+				</div>
+			</div>
+		}
+
+	</div>
+</div>

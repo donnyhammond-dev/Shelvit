@@ -1,0 +1,124 @@
+﻿@using BackLog.ViewModels.DashboardViewModels
+@model BookStatsViewModel
+
+<div class="hero-statement">Book Library</div>
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            <!-- ONE MAIN CARD -->
+            <div class="card shadow-sm">
+
+                <!-- HEADER -->
+                <div class="card-header bg-primary text-white">
+                    <h2 class="section-header">My Stats</h2>
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body">
+
+                    <div class="row text-center mt-2">
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.TotalBooks</h2>
+                                    <p>Owned</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.CompletionRate.ToString("0")%</h2>
+                                    <p>Completion Rate</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.CompletionCount</h2>
+                                    <p>Read</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.BackLogCount</h2>
+                                    <p>BackLogged</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.PhysicalCount</h2>
+                                    <p>Physical Books</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h2>@Model.DigitalCount</h2>
+                                    <p>Digital Books</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h4>@(Model.PreferredFormat.ToString() ?? "N/A")</h4>
+                                    <p>Preferred Format</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h4 class="text-truncate">@(Model.FavoriteAuthor ?? "N/A") </h4>
+                                    <p>Favorite Author</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card mx-auto" style="max-width: 250px;">
+                                <div class="card-body">
+                                    <h4>@(Model.FavoriteGenre.ToString() ?? "N/A")</h4>
+                                    <p>Favorite Genre</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="d-flex justify-content-end mb-3 me-4">
+                    <a asp-action="Index" class="btn btn-outline-primary" title="Return to Library">
+                        <i class="bi bi-arrow-left fs-6 me-1"></i>
+                        Return
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
