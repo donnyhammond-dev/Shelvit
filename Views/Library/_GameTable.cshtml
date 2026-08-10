@@ -10,8 +10,8 @@
 			<!--Table Header-->
 			<thead class="table-header">
 				<tr>
-					<th style="width:12%"><!--Game Images Column--></th>
-					<th style="width:15%">
+					<th class="game-image-col"><!--Game Images Column--></th>
+				<th class="game-title-col">
 						<a asp-action="Index"
 						   class="sort-link"
 						   title="Sort By Title"
@@ -106,7 +106,7 @@
 							}
 						</a>
 					</th>
-					<th style="width:7%">
+					<th>
 						<a asp-action="Index"
 						   class="sort-link"
 						   title="Sort By Rating"
@@ -150,7 +150,7 @@
 									 style="width:120px" />
 							</button>
 						</td>
-						<td><strong>@game.Title</strong></td>
+						<td>@game.Title</td>
 				     	<td class="d-none d-lg-table-cell">@game.Year</td>
 				     	<td>
 				    		<img src="@Url.Content(game.Platform.GetPlatformIconPath())"

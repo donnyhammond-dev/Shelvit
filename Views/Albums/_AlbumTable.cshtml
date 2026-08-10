@@ -11,9 +11,9 @@
 		<!--Table Header-->
 		<thead class="table-header">
 			<tr>
-				<th style="width:12%" class="text-primary"><!--Album Image--></th>
+				<th><!--Album Image--></th>
 
-				<th style="width:15%">
+				<th>
 					<a asp-action="Index"
 					   class="sort-link"
 					   title="Sort By Title"
@@ -34,7 +34,7 @@
 					</a>
 				</th>
 
-				<th style="width:15%">
+				<th>
 					<a asp-action="Index"
 					   class="sort-link"
 					   title="Sort By Artist"
@@ -55,7 +55,7 @@
 					</a>
 				</th>
 
-				<th style="width:8%" class="d-none d-lg-table-cell">
+				<th class="d-none d-lg-table-cell">
 					<a asp-action="Index"
 					   class="sort-link"
 					   title="Sort By Year"
@@ -76,7 +76,7 @@
 					</a>
 				</th>
 
-				<th style="width:8%">
+				<th>
 					<a asp-action="Index"
 					   class="sort-link"
 					   title="Sort By Format"
@@ -139,7 +139,7 @@
 					</a>
 				</th>
 
-				<th style="width:7%">
+				<th>
 					<a asp-action="Index"
 					   class="sort-link"
 					   title="Sort By Rating"
@@ -183,8 +183,8 @@
 							 style="width:180px;" />
 					</button>
 			    	</td>
-					<td><strong>@album.Title</strong></td>
-					<td><strong>@album.Artist</strong></td>
+					<td>@album.Title</td>
+					<td>@album.Artist</td>
 					<td class="d-none d-lg-table-cell">@album.Year</td>
 					<td>
 						<img src="@Url.Content(album.Format.GetMusicFormatIconPath())"

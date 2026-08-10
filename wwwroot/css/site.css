@@ -38,7 +38,6 @@ html {
 body {
     margin: 0;
     margin-bottom: 60px;
-    overflow-x: hidden;
     font-family: 'Inter', sans-serif;
     background: #111;
 }
@@ -512,7 +511,7 @@ body {
     }
 
 .music-format-icon {
-    width: clamp(20px, 4vw, 40px);
+    width: clamp(30px, 4vw, 40px);
     height: auto;
     vertical-align: middle;
     filter: brightness(0) invert(1);
@@ -526,8 +525,79 @@ body {
 }
 
 .status-icon {
-    width: clamp(20px, 3vw, 30px);
+    width: clamp(30px, 3vw, 30px);
     height: auto;
     vertical-align: middle;
     filter: brightness(0) invert(1);
+}
+
+/* Desktop */
+.game-image-col {
+    width: 12%;
+}
+
+.game-title-col {
+    width: 15%;
+}
+
+.game-platform-col{
+    width: 8%
+}
+
+/* Tablets and below */
+@media (max-width: 991.98px) {
+
+    .game-image-col {
+        width: 20%;
+    }
+
+    .game-title-col {
+        width: 20%;
+    }
+
+}
+
+
+
+.title-font {
+    font-size: clamp(.8rem, .9vw, 1rem);
+}
+
+/* Wider content on tablets and small screens */
+@media (max-width: 991.98px) {
+    .container {
+        max-width: 95%;
+    }
+}
+
+/* Nearly full width on phones */
+@media (max-width: 767.98px) {
+    body {
+        zoom: .85;
+    }
+
+    .container {
+        max-width: 98%;
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+}
+
+.app-scale {
+    transform-origin: top left;
+}
+
+@media (max-width: 767.98px) {
+    .app-scale {
+        transform: scale(.85);
+        width: 117.65%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    html,
+    body {
+        min-width: 768px;
+        overflow-x: auto;
+    }
 }

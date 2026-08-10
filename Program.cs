@@ -24,12 +24,12 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddHttpClient<IAlbumImageService, AlbumImageService>(x => x.Timeout = TimeSpan.FromSeconds(5));
-builder.Services.AddHttpClient<IGameImageService, GameImageService>(x => x.Timeout = TimeSpan.FromSeconds(5));
-builder.Services.AddHttpClient<IBookImageService, BookImageService>(x => x.Timeout = TimeSpan.FromSeconds(5));
-builder.Services.AddHttpClient<IGameSearchService, GameSearchService>();
-builder.Services.AddHttpClient<IAlbumSearchService, AlbumSearchService>();
-builder.Services.AddHttpClient<IBookSearchService, BookSearchService>();
+builder.Services.AddHttpClient<IAlbumImageService, AlbumImageService>(x => x.Timeout = TimeSpan.FromSeconds(8));
+builder.Services.AddHttpClient<IGameImageService, GameImageService>(x => x.Timeout = TimeSpan.FromSeconds(8));
+builder.Services.AddHttpClient<IBookImageService, BookImageService>(x => x.Timeout = TimeSpan.FromSeconds(8));
+builder.Services.AddHttpClient<IGameSearchService, GameSearchService>(x => x.Timeout = TimeSpan.FromSeconds(8));
+builder.Services.AddHttpClient<IAlbumSearchService, AlbumSearchService>(x => x.Timeout = TimeSpan.FromSeconds(8));
+builder.Services.AddHttpClient<IBookSearchService, BookSearchService>(x => x.Timeout = TimeSpan.FromSeconds(8));
 builder.Services.AddScoped<IGameStatsService, GameStatsService>();
 builder.Services.AddScoped<IAlbumStatsService, AlbumStatsService>();
 builder.Services.AddScoped<IBookStatsService, BookStatsService>();

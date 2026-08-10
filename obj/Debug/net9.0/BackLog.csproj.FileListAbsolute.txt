@@ -286,4 +286,5 @@ C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\compressed\5cviwbay
 C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\compressed\6mjtcbbe6g-f4ob55zm8y.gz
 C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\compressed\6s03nyel9d-hym0v8j4g0.gz
 C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\compressed\9y5f1im8yx-4ays3uw9kq.gz
-C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\compressed\lzkp36eg5a-uzuuolnr05.gz
+C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\BackLog.sourcelink.json
+C:\Users\dkham\source\repos\BackLog\BackLog\obj\Debug\net9.0\compressed\lzkp36eg5a-l27fe04k1v.gz
