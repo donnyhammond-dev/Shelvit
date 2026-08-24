@@ -10,11 +10,13 @@ namespace BackLog.Services.GameServices
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
+        private readonly ILogger<GameSearchService> _logger;
 
-        public GameSearchService(HttpClient httpClient, IConfiguration config)
+        public GameSearchService(HttpClient httpClient, IConfiguration config, ILogger<GameSearchService> logger)
         {
             _httpClient = httpClient;
             _config = config;
+            _logger = logger;
         }
 
         public async Task<GameDto?> GameSearchAsync(string title)
@@ -25,9 +27,25 @@ namespace BackLog.Services.GameServices
 
             var url = $"https://api.rawg.io/api/games?key={apiKey}&search={query}";
 
-            var response = await _httpClient.GetStringAsync(url);
+            try
+            {
+                _logger.LogInformation(
+                    "Searching RAWG for data on {Title}",
+                    title);
 
-            return ParseResponse(response, title);
+                var response = await _httpClient.GetStringAsync(url);
+
+                return ParseResponse(response, title);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Failed to retrieve RAWG data for {Title}",
+                    title);
+
+                return null;
+            }
         }
 
         public async Task<List<string>> GameAutocompleteAsync(string title)
@@ -37,31 +55,45 @@ namespace BackLog.Services.GameServices
 
             var url = $"https://api.rawg.io/api/games?key={apiKey}&search={query}&page_size=5";
 
-            var response = await _httpClient.GetStringAsync(url);
-
-            using var doc = JsonDocument.Parse(response);
-
-            if (!doc.RootElement.TryGetProperty("results", out var results))
-                return new List<string>();
-
-            var titles = new List<string>();
-
-            foreach (var game in results.EnumerateArray())
+            try
             {
-                if (!game.TryGetProperty("name", out var nameProp))
-                    continue;
+                _logger.LogInformation("Searching RAWG for data on {Title}", title);
 
-                var name = nameProp.GetString();
+                var response = await _httpClient.GetStringAsync(url);
 
-                if (!string.IsNullOrWhiteSpace(name))
+                using var doc = JsonDocument.Parse(response);
+
+                if (!doc.RootElement.TryGetProperty("results", out var results))
+                    return new List<string>();
+
+                var titles = new List<string>();
+
+                foreach (var game in results.EnumerateArray())
                 {
-                    titles.Add(System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ").Trim());
+                    if (!game.TryGetProperty("name", out var nameProp))
+                        continue;
+
+                    var name = nameProp.GetString();
+
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        titles.Add(System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ").Trim());
+                    }
                 }
+
+                _logger.LogInformation("Returned {Count} title suggestions for \"{Title}\"", titles.Count, title);
+
+                return titles
+                    .Distinct()
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve data for {Title}", title);
+
+                return new List<string>();
             }
 
-            return titles
-                .Distinct()
-                .ToList();
         }
 
         private static GameDto? ParseResponse(string json, string title)
