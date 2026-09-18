@@ -68,7 +68,7 @@ namespace BackLog.ControllersS
 
             vm.FormatList = SelectListHelper.GetEnumSelectList<BookFormat>("All Formats");
 
-            vm.StatusList = SelectListHelper.GetEnumSelectList<CompletionStatus>("All Statuses", false);
+            vm.StatusList = SelectListHelper.GetEnumSelectList<CompletionStatus>(null, false);
 
             vm.ShareToken = user!.BookShareToken;
 
@@ -128,7 +128,10 @@ namespace BackLog.ControllersS
 
         public IActionResult Create()
         {
-            var vm = new BookFormViewModel();
+            var vm = new BookFormViewModel
+            {
+                Status = CompletionStatus.NotStarted
+            };
 
             PopulateBookFormViewModel(vm);
 

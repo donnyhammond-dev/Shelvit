@@ -21,7 +21,7 @@ namespace BackLog.Controllers
         private readonly IGameStatsService _statsService;
         private string userId => _userManager.GetUserId(User)!;
 
-        public LibraryController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
+        public LibraryController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
             IGameImageService imageService, IGameStatsService statsService, IGameSearchService searchService)
         {
             _context = context;
@@ -62,13 +62,13 @@ namespace BackLog.Controllers
             vm.GenreList = await SelectListHelper.GetDistinctEnumSelectListAsync<Game, Genre>(
                 query, x => (Genre)x.Genre!, "All Genres");
 
-            vm.StatusList = SelectListHelper.GetEnumSelectList<Status>("All Statuses", false);       
+            vm.StatusList = SelectListHelper.GetEnumSelectList<Status>("All Statuses", false);
 
             vm.StatusGroupList = new List<SelectListItem>
             {
                 new SelectListItem { Value = "", Text = "My Games"},
                 new SelectListItem { Value = "BackLog", Text = "BackLog"},
-                new SelectListItem { Value = "CompletionList", Text = "Completion List"},
+                new SelectListItem { Value = "CompletionList", Text = "Completion List"}
             };
 
             vm.ShareToken = user!.GameShareToken;
@@ -275,7 +275,7 @@ namespace BackLog.Controllers
                 TempData["ImageFail"] = $"Unable to get a Cover for {game.Title} at this time";
             }
 
-            return RedirectToAction("Index", new { pageNumber = vm.PageNumber});
+            return RedirectToAction("Index", new { pageNumber = vm.PageNumber });
         }
 
         /*
@@ -302,7 +302,7 @@ namespace BackLog.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id, int pageNumber)
+        public async Task<IActionResult> DeleteConfirmed(int? id, int pageNumber, string? returnUrl)
         {
             if (id == null) return NotFound();
             var game = await GetUserGameAsync(id.Value);
@@ -312,7 +312,12 @@ namespace BackLog.Controllers
 
             TempData["Success"] = $"{game.Title} deleted successfully";
 
-            return RedirectToAction("Index", new {pageNumber});
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", new { pageNumber });
         }
 
         public async Task<IActionResult> Stats()
@@ -337,7 +342,7 @@ namespace BackLog.Controllers
 
             TempData["Success"] = $"Image Url was successfully saved";
 
-            return RedirectToAction("Index", new {pageNumber});
+            return RedirectToAction("Index", new { pageNumber });
         }
 
         private async Task<Game?> GetUserGameAsync(int id)
@@ -350,7 +355,34 @@ namespace BackLog.Controllers
             vm.YearList = SelectListHelper.GetYearList(1980, "Select Year");
             vm.PlatformList = SelectListHelper.GetEnumSelectList<Platform>("Select Platform");
             vm.GenreList = SelectListHelper.GetEnumSelectList<Genre>("Select Genre");
-            vm.StatusList = SelectListHelper.GetEnumSelectList<Status>("Select Status", false);
+            vm.StatusList = new List<SelectListItem>
+                  {
+                       new SelectListItem
+                       {
+                           Value = Status.NotStarted.ToString(),
+                           Text = "Not Started"
+                       },
+                       new SelectListItem
+                       {
+                           Value = Status.Started.ToString(),
+                           Text = "Incomplete"
+                       },
+                       new SelectListItem
+                       {
+                           Value = Status.Completed.ToString(),
+                           Text = "Complete"
+                       },
+                       new SelectListItem
+                       {
+                           Value = Status.FullyCompleted.ToString(),
+                           Text = "100%"
+                       },
+                       new SelectListItem
+                       {
+                           Value = Status.Abandoned.ToString(),
+                           Text = "Abandoned"
+                       }
+                 };
         }
 
         [HttpGet]

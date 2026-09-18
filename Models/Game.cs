@@ -115,7 +115,8 @@ namespace BackLog.Models
         Puzzle,
         Platformer,
         Fighting,
-        Horror
+        Horror,
+        Rhythm
     }
 
     public class Game

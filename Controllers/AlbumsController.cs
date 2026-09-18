@@ -67,7 +67,7 @@ namespace BackLog.Controllers
 
             vm.FormatList = SelectListHelper.GetEnumSelectList<Format>("All Formats");
 
-            vm.StatusList = SelectListHelper.GetEnumSelectList<CompletionStatus>("All Statuses", false);
+            vm.StatusList = SelectListHelper.GetEnumSelectList<CompletionStatus>("null", false);
 
             vm.ShareToken = user!.AlbumShareToken;
 
@@ -119,7 +119,10 @@ namespace BackLog.Controllers
 
         public IActionResult Create()
         {
-            var vm = new AlbumFormViewModel();
+            var vm = new AlbumFormViewModel
+            {
+                Status = CompletionStatus.NotStarted
+            };
             PopulateAlbumFormViewModel(vm);
             return View(vm);
         }
