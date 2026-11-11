@@ -67,7 +67,7 @@ namespace BackLog.Controllers
 
             vm.FormatList = SelectListHelper.GetEnumSelectList<Format>("All Formats");
 
-            vm.StatusList = SelectListHelper.GetEnumSelectList<CompletionStatus>("null", false);
+            vm.StatusList = SelectListHelper.GetEnumSelectList<CompletionStatus>("All Statuses", false);
 
             vm.ShareToken = user!.AlbumShareToken;
 

@@ -33,7 +33,7 @@ namespace BackLog.Helpers
                 Platform.Dreamcast => "~/images/platforms/dreamcast.svg.webp",
                 Platform.PS2 => "~/images/platforms/ps2.svg.webp",
                 Platform.GameCube => "~/images/platforms/gamecube.svg.webp",
-                Platform.Xbox => "~/images/platforms/xbox.svg.webp",
+                Platform.Xbox => "~/images/platforms/ogxbox.svg.webp",
                 Platform.Xbox360 => "~/images/platforms/xbox360.svg.webp",
                 Platform.PS3 => "~/images/platforms/ps3.svg.webp",
                 Platform.Wii => "~/images/platforms/wii.svg.webp",
